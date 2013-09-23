@@ -9,8 +9,8 @@
       this._box = $('<div class="dolly-box hidden"></div>');
       this._handle = $('<div class="dolly-handle hidden"></div>');
       this._wrapper = $('<div id="dolly-wrapper" style="position: relative; height: 100%; width: 100%; display: inline-block;"></div>');
-      this._handle.css({right: -1 * parseInt(this.element.css("padding-right"), 10) - 2 + "px",
-                        bottom: -1 * parseInt(this.element.css("padding-bottom"), 10) - 2 + "px"});
+      this._handle.css({right: -1 * this._getCssAsNumber("padding-right") - 2 + "px",
+                        bottom: -1 * this._getCssAsNumber("padding-bottom") - 2 + "px"});
       this.element.wrapInner(this._wrapper);
       this._wrapper = this.element.find('div#dolly-wrapper');
       this._wrapper.append(this._box);
@@ -25,26 +25,36 @@
       this._handle.on("mousedown", function (e) {
         self._initialX = e.pageX;
         self._initialY = e.pageY;
+        self._extendX = 0;
+        self._extendY = 0;
         self._box.removeClass("hidden");
         $("body").find(".dolly-handle").css({display: "none"});
         self._resetBoxSize();
         self._setTopLeftBoxPosition();
+
         $(window).disableSelection();
+
         $(window).on("mousemove", function (e) {
           self._handleDrag(e);
         });
+
+        $(window).on("mouseup", function () {
+          self._box.addClass("hidden");
+          $("body").find(".dolly-handle").css({display: ""});
+          $(window).enableSelection();
+          $(window).off("mousemove");
+          $(window).off("mouseup");
+          self._trigger("extended", null, { extendX: self._extendX,
+                                            extendY: self._extendY });
+        });
       });
 
-      $(window).on("mouseup", function () {
-        self._box.addClass("hidden");
-        $("body").find(".dolly-handle").css({display: ""});
-        $(window).enableSelection();
-        $(window).off("mousemove");
-      });
     },
 
     _handleDrag: function (e) {
       this._resetBoxSize();
+      this._extendX = 0;
+      this._extendY = 0;
       if (Math.abs(e.pageX - this._initialX) > Math.abs(e.pageY - this._initialY)) {
         this._getCellsHorizontally(e.pageX);
       } else {
@@ -74,98 +84,96 @@
 
     _getCellsUp: function (cell, offset) {
       var index = cell.closest(this.options.rowSelector).find(this.options.cellSelector).index(this.element);
-      var cellInNextRow = $(cell.closest(this.options.rowSelector).prev(this.options.rowSelector).find(this.options.cellSelector).get(index));
-      if (cell.length === 0) {
+      var next = $(cell.closest(this.options.rowSelector).prev(this.options.rowSelector).find(this.options.cellSelector).get(index));
+
+      if (next.length === 0 || offset > this._getCellEdges(next).bottom - 10) {
         return;
       }
 
-      var cellWrapper = cell.find("#dolly-wrapper");
-
-      var bottomCellEdge = cellWrapper.offset().top + cellWrapper.height() + parseInt(this.element.css("padding-top"), 10);
-      var topCellEdge = cellWrapper.offset().top - parseInt(this.element.css("padding-top"), 10);
-
-      if (offset < bottomCellEdge - 10) {
-        this._box.height(this._box.offset().top + this._box.height() - topCellEdge + 2);
-        this._getCellsUp(cellInNextRow, offset);
-      }
+      this._extendY -= 1;
+      this._box.height(this._box.offset().top + this._box.height() - this._getCellEdges(next).top + 2);
+      this._getCellsUp(next, offset);
     },
 
     _getCellsLeft: function (cell, offset) {
       var next = cell.prev(this.options.cellSelector);
 
-      if (cell.length === 0) {
+      if (next.length === 0 || offset > this._getCellEdges(next).right - 10) {
         return;
       }
 
-      var cellWrapper = cell.find("#dolly-wrapper");
-
-      var rightCellEdge = cellWrapper.offset().left + cellWrapper.width() + parseInt(this.element.css("padding-right"), 10);
-      var leftCellEdge = cellWrapper.offset().left - parseInt(this.element.css("padding-left"), 10);
-
-      if (offset < rightCellEdge - 10) {
-        this._box.width(this._box.offset().left + this._box.width() - leftCellEdge + 2);
-        this._getCellsLeft(next, offset);
-      }
-
+      this._extendX -= 1;
+      this._box.width(this._box.offset().left + this._box.width() - this._getCellEdges(next).left + 2);
+      this._getCellsLeft(next, offset);
     },
 
     _getCellsRight: function (cell, offset) {
       var next = cell.next(this.options.cellSelector);
-      if (cell.length === 0) {
+
+      if (next.length === 0 || offset < next.offset().left + 10) {
         return;
       }
 
-      var cellWrapper = cell.find("#dolly-wrapper");
-
-      var rightCellEdge = cellWrapper.offset().left + cellWrapper.width() + parseInt(this.element.css("padding-right"), 10);
-
-      if (offset > cell.offset().left + 10) {
-        this._box.width(rightCellEdge - this._box.offset().left - 2);
-        this._getCellsRight(next, offset);
-      }
+      this._extendX += 1;
+      this._box.width(this._getCellEdges(next).right - this._box.offset().left - 2);
+      this._getCellsRight(next, offset);
     },
 
     _getCellsDown: function (cell, offset) {
       var index = cell.closest(this.options.rowSelector).find(this.options.cellSelector).index(this.element);
-      var cellInNextRow = $(cell.closest(this.options.rowSelector).next(this.options.rowSelector).find(this.options.cellSelector).get(index));
-      if (cell.length === 0) {
+      var next = $(cell.closest(this.options.rowSelector).next(this.options.rowSelector).find(this.options.cellSelector).get(index));
+
+      if (next.length === 0 || offset < next.offset().top + 10) {
         return;
       }
 
-      var cellWrapper = cell.find("#dolly-wrapper");
-
-      var bottomCellEdge = cellWrapper.offset().top + cellWrapper.height() + parseInt(this.element.css("padding-top"), 10);
-
-      if (offset > cell.offset().top + 10) {
-        this._box.height(bottomCellEdge - this._box.offset().top - 2);
-        this._getCellsDown(cellInNextRow, offset);
-      }
+      this._extendY += 1;
+      this._box.height(this._getCellEdges(next).bottom - this._box.offset().top - 2);
+      this._getCellsDown(next, offset);
     },
 
     _resetBoxSize: function () {
-      this._box.width(this._wrapper.width() + this._getCssParameter("padding-left") + this._getCssParameter("padding-right"));
-      this._box.height(this._wrapper.innerHeight() + this._getCssParameter("padding-top") + this._getCssParameter("padding-bottom"));
+      this._box.width(this._getCellSize().width);
+      this._box.height(this._getCellSize().height);
     },
 
     _setTopLeftBoxPosition: function () {
-      this._box.css({ top: -1 * this._getCssParameter("padding-top") - 2 + "px",
-                      left: -1 * this._getCssParameter("padding-left") -2 +"px",
+      this._box.css({ top: -1 * this._getCssAsNumber("padding-top") - 2 + "px",
+                      left: -1 * this._getCssAsNumber("padding-left") -2 +"px",
                       bottom: "",
                       right: "" });
     },
 
     _setBottomRightBoxPosition: function () {
-      this._box.css({ bottom: -1 * this._getCssParameter("padding-bottom") - 2 + "px",
-                      right: -1 * this._getCssParameter("padding-right") -2 +"px",
+      this._box.css({ bottom: -1 * this._getCssAsNumber("padding-bottom") - 2 + "px",
+                      right: -1 * this._getCssAsNumber("padding-right") -2 +"px",
                       top: "",
                       left: "" });
     },
 
+    _getCellEdges: function (cell) {
+      var wrapper = cell.find("#dolly-wrapper");
+      return {
+        top: wrapper.offset().top - this._getCssAsNumber("padding-top", cell),
+        bottom: wrapper.offset().top + wrapper.height() + this._getCssAsNumber("padding-bottom", cell),
+        left: wrapper.offset().left - this._getCssAsNumber("padding-left", cell),
+        right: wrapper.offset().left + wrapper.width() + this._getCssAsNumber("padding-right", cell)
+      };
+    },
 
-    _getCssParameter: function (param) {
-      return parseInt(this.element.css(param), 10);
+    _getCellSize: function (cell) {
+      cell = cell || this.element;
+      var wrapper = cell.find("#dolly-wrapper");
+      return {
+        width: this._getCssAsNumber("padding-left", cell) + this._getCssAsNumber("padding-right", cell) + wrapper.width(),
+        height: this._getCssAsNumber("padding-top", cell) + this._getCssAsNumber("padding-bottom", cell) + wrapper.height()
+      };
+    },
+
+    _getCssAsNumber: function (param, elem) {
+      elem = elem || this.element;
+      return parseInt(elem.css(param), 10);
     }
-
 
   });
 }(jQuery));

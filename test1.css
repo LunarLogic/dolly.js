@@ -5,7 +5,11 @@ td {
 td {
   width: 30px;
   height: 30px;
-  padding: 20px;
+  padding: 10px 20px 30px 40px;
+}
+
+td:last-child {
+  padding-right: 100px;
 }
 
 table {
