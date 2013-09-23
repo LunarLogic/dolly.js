@@ -18,9 +18,5 @@ div.dolly-handle {
   right: -4px;
   bottom: -4px;
   cursor: crosshair;
-  display: none;
 }
 
-td:hover div.dolly-handle {
-  display: block;
-}

@@ -1,32 +1,32 @@
 (function ($) {
   $.widget("llp.dolly", {
-    _box: null,
-    _handle: null,
-    _initialX: 0,
-    _initialY: 0,
+    options: {
+      rowSelector: "tr",
+      cellSelector: "td"
+    },
     _create: function () {
       var self = this;
       this._box = $('<div class="dolly-box hidden"></div>');
-      this._box.css({width: "",
-                     height: "",
-                     top: "-2px",
-                     right: "-2px",
-                     left:"",
-                     bottom: ""});
-      this._handle = $('<div class="dolly-handle"></div>');
+      this._handle = $('<div class="dolly-handle hidden"></div>');
+      this._wrapper = $('<div id="dolly-wrapper" style="position: relative; height: 100%; width: 100%; display: inline-block;"></div>');
       this._handle.css({right: -1 * parseInt(this.element.css("padding-right"), 10) - 2 + "px",
                         bottom: -1 * parseInt(this.element.css("padding-bottom"), 10) - 2 + "px"});
-      console.log(this.element.css("padding-right"));
-      this._wrapper = $('<div id="dolly-wrapper" style="position: relative; height: 100%; width: 100%; display: inline-block;"></div>');
       this.element.wrapInner(this._wrapper);
-      this._wrapper = this.element.find('div');
+      this._wrapper = this.element.find('div#dolly-wrapper');
       this._wrapper.append(this._box);
       this._wrapper.append(this._handle);
+
+      this.element.hover(function () {
+        self._handle.removeClass("hidden");
+      }, function () {
+        self._handle.addClass("hidden");
+      });
 
       this._handle.on("mousedown", function (e) {
         self._initialX = e.pageX;
         self._initialY = e.pageY;
         self._box.removeClass("hidden");
+        $("body").find(".dolly-handle").css({display: "none"});
         self._resetBoxSize();
         self._setTopLeftBoxPosition();
         $(window).disableSelection();
@@ -37,6 +37,7 @@
 
       $(window).on("mouseup", function () {
         self._box.addClass("hidden");
+        $("body").find(".dolly-handle").css({display: ""});
         $(window).enableSelection();
         $(window).off("mousemove");
       });
@@ -72,8 +73,8 @@
     },
 
     _getCellsUp: function (cell, offset) {
-      var index = cell.closest("tr").find("td").index(this.element);
-      var cellInNextRow = $(cell.closest("tr").prev("tr").find("td").get(index));
+      var index = cell.closest(this.options.rowSelector).find(this.options.cellSelector).index(this.element);
+      var cellInNextRow = $(cell.closest(this.options.rowSelector).prev(this.options.rowSelector).find(this.options.cellSelector).get(index));
       if (cell.length === 0) {
         return;
       }
@@ -90,7 +91,7 @@
     },
 
     _getCellsLeft: function (cell, offset) {
-      var next = cell.prev("td");
+      var next = cell.prev(this.options.cellSelector);
 
       if (cell.length === 0) {
         return;
@@ -109,7 +110,7 @@
     },
 
     _getCellsRight: function (cell, offset) {
-      var next = cell.next("td");
+      var next = cell.next(this.options.cellSelector);
       if (cell.length === 0) {
         return;
       }
@@ -125,8 +126,8 @@
     },
 
     _getCellsDown: function (cell, offset) {
-      var index = cell.closest("tr").find("td").index(this.element);
-      var cellInNextRow = $(cell.closest("tr").next("tr").find("td").get(index));
+      var index = cell.closest(this.options.rowSelector).find(this.options.cellSelector).index(this.element);
+      var cellInNextRow = $(cell.closest(this.options.rowSelector).next(this.options.rowSelector).find(this.options.cellSelector).get(index));
       if (cell.length === 0) {
         return;
       }
