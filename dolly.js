@@ -2,24 +2,64 @@
   $.widget("llp.dolly", {
     options: {
       rowSelector: "tr",
-      cellSelector: "td"
+      cellSelector: "td",
+      boxStyle: {
+        border: "2px dotted black",
+      },
+      handleStyle: {
+        width: "8px",
+        height: "8px",
+        "background-color": "black",
+        cursor: "crosshair",
+      },
     },
+
+    _boxStyle: {
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+      "z-index": "1000",
+    },
+
+    _handleStyle: {
+      position: "absolute",
+    },
+
+    _wrapperStyle: {
+      position: "relative",
+      height: "100%",
+      width: "100%",
+      display: "inline-block",
+    },
+
     _create: function () {
       var self = this;
-      this._box = $('<div class="dolly-box hidden"></div>');
-      this._handle = $('<div class="dolly-handle hidden"></div>');
-      this._wrapper = $('<div id="dolly-wrapper" style="position: relative; height: 100%; width: 100%; display: inline-block;"></div>');
+
+      this._box = $('<div class="dolly-box" style="visibility: hidden"></div>');
+      this._handle = $('<div class="dolly-handle" style="visibility: hidden"></div>');
+      this._wrapper = $('<div id="dolly-wrapper"></div>');
+
+      this._wrapper.css(this._wrapperStyle);
+
       this._handle.css({right: -1 * this._getCssAsNumber("padding-right") - 2 + "px",
                         bottom: -1 * this._getCssAsNumber("padding-bottom") - 2 + "px"});
+      this._handle.css(this.options.handleStyle);
+      this._handle.css(this._handleStyle);
+
+      this._box.css(this.options.boxStyle);
+      this._box.css(this._boxStyle);
+
+      this._boxBorder = this._getCssAsNumber("border-width", this._box);
+
       this.element.wrapInner(this._wrapper);
       this._wrapper = this.element.find('div#dolly-wrapper');
       this._wrapper.append(this._box);
       this._wrapper.append(this._handle);
 
       this.element.hover(function () {
-        self._handle.removeClass("hidden");
+        self._handle.css({visibility: "visible"});
       }, function () {
-        self._handle.addClass("hidden");
+        self._handle.css({visibility: "hidden"});
       });
 
       this._handle.on("mousedown", function (e) {
@@ -27,7 +67,7 @@
         self._initialY = e.pageY;
         self._extendX = 0;
         self._extendY = 0;
-        self._box.removeClass("hidden");
+        self._box.css({visibility: "visible"});
         $("body").find(".dolly-handle").css({display: "none"});
         self._resetBoxSize();
         self._setTopLeftBoxPosition();
@@ -39,7 +79,7 @@
         }
 
         var mouseUpListener = function () {
-          self._box.addClass("hidden");
+          self._box.css({visibility: "hidden"});
           $("body").find(".dolly-handle").css({display: ""});
           $(window).enableSelection();
           $(window).off("mousemove", mouseMoveListener);
@@ -56,12 +96,18 @@
 
     _handleDrag: function (e) {
       this._resetBoxSize();
+      var prevExtendX = this._extendX;
+      var prevExtendY = this._extendY;
       this._extendX = 0;
       this._extendY = 0;
       if (Math.abs(e.pageX - this._initialX) > Math.abs(e.pageY - this._initialY)) {
         this._getCellsHorizontally(e.pageX);
       } else {
         this._getCellsVertically(e.pageY);
+      }
+      if (prevExtendX !== this._extendX || prevExtendY !== this._extendY) {
+        this._trigger("selected", null, { extendX: this._extendX,
+                                          extendY: this._extendY });
       }
     },
 
@@ -94,7 +140,7 @@
       }
 
       this._extendY -= 1;
-      this._box.height(this._box.offset().top + this._box.height() - this._getCellEdges(next).top + 2);
+      this._box.height(this._box.offset().top + this._box.height() - this._getCellEdges(next).top + this._boxBorder);
       this._getCellsUp(next, offset);
     },
 
@@ -106,7 +152,7 @@
       }
 
       this._extendX -= 1;
-      this._box.width(this._box.offset().left + this._box.width() - this._getCellEdges(next).left + 2);
+      this._box.width(this._box.offset().left + this._box.width() - this._getCellEdges(next).left + this._boxBorder);
       this._getCellsLeft(next, offset);
     },
 
@@ -118,7 +164,7 @@
       }
 
       this._extendX += 1;
-      this._box.width(this._getCellEdges(next).right - this._box.offset().left - 2);
+      this._box.width(this._getCellEdges(next).right - this._box.offset().left - this._boxBorder);
       this._getCellsRight(next, offset);
     },
 
@@ -131,7 +177,7 @@
       }
 
       this._extendY += 1;
-      this._box.height(this._getCellEdges(next).bottom - this._box.offset().top - 2);
+      this._box.height(this._getCellEdges(next).bottom - this._box.offset().top - this._boxBorder);
       this._getCellsDown(next, offset);
     },
 
@@ -141,15 +187,15 @@
     },
 
     _setTopLeftBoxPosition: function () {
-      this._box.css({ top: -1 * this._getCssAsNumber("padding-top") - 2 + "px",
-                      left: -1 * this._getCssAsNumber("padding-left") -2 +"px",
+      this._box.css({ top: -1 * this._getCssAsNumber("padding-top") - this._boxBorder + "px",
+                      left: -1 * this._getCssAsNumber("padding-left") - this._boxBorder + "px",
                       bottom: "",
                       right: "" });
     },
 
     _setBottomRightBoxPosition: function () {
-      this._box.css({ bottom: -1 * this._getCssAsNumber("padding-bottom") - 2 + "px",
-                      right: -1 * this._getCssAsNumber("padding-right") -2 +"px",
+      this._box.css({ bottom: -1 * this._getCssAsNumber("padding-bottom") - this._boxBorder + "px",
+                      right: -1 * this._getCssAsNumber("padding-right") - this._boxBorder + "px",
                       top: "",
                       left: "" });
     },
@@ -176,7 +222,7 @@
     _getCssAsNumber: function (param, elem) {
       elem = elem || this.element;
       return parseInt(elem.css(param), 10);
-    }
+    },
 
   });
 }(jQuery));
