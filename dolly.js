@@ -34,19 +34,22 @@
 
         $(window).disableSelection();
 
-        $(window).on("mousemove", function (e) {
+        var mouseMoveListener = function (e) {
           self._handleDrag(e);
-        });
+        }
 
-        $(window).on("mouseup", function () {
+        var mouseUpListener = function () {
           self._box.addClass("hidden");
           $("body").find(".dolly-handle").css({display: ""});
           $(window).enableSelection();
-          $(window).off("mousemove");
-          $(window).off("mouseup");
-          self._trigger("extended", null, { extendX: self._extendX,
-                                            extendY: self._extendY });
-        });
+          $(window).off("mousemove", mouseMoveListener);
+          $(window).off("mouseup", mouseUpListener);
+          self._trigger("cloned", null, { extendX: self._extendX,
+                                          extendY: self._extendY });
+        }
+
+        $(window).on("mousemove", mouseMoveListener);
+        $(window).on("mouseup", mouseUpListener);
       });
 
     },

@@ -2,7 +2,7 @@ $(window).load(function () {
   $('.cell').dolly({
     rowSelector: ".row",
     cellSelector: ".cell",
-    extended: function (event, ui) {
+    cloned: function (event, ui) {
       console.log(ui);
     }
   });

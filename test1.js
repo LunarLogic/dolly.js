@@ -1,5 +1,5 @@
 $(window).load(function () {
-  $('td').dolly().on('dollyextended', function (event, ui) {
+  $('td').dolly().on('dollycloned', function (event, ui) {
     console.log(ui);
   });
 });
