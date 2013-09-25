@@ -32,7 +32,7 @@ $(window).load(function () {
       }
       $("td").dolly({
         cloned: function (event, ui) {
-          self.onClone(this, ui.extendX, ui.extendY);
+          self.onClone(this, ui.cloneX, ui.cloneY);
         },
         boxStyle: {
           "background-color": "rgba(255, 0, 0, 0.2)",

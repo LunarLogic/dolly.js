@@ -65,8 +65,8 @@
       this._handle.on("mousedown", function (e) {
         self._initialX = e.pageX;
         self._initialY = e.pageY;
-        self._extendX = 0;
-        self._extendY = 0;
+        self._cloneX = 0;
+        self._cloneY = 0;
         self._box.css({visibility: "visible"});
         $("body").find(".dolly-handle").css({display: "none"});
         self._resetBoxSize();
@@ -84,8 +84,8 @@
           $(window).enableSelection();
           $(window).off("mousemove", mouseMoveListener);
           $(window).off("mouseup", mouseUpListener);
-          self._trigger("cloned", null, { extendX: self._extendX,
-                                          extendY: self._extendY });
+          self._trigger("cloned", null, { cloneX: self._cloneX,
+                                          cloneY: self._cloneY });
         }
 
         $(window).on("mousemove", mouseMoveListener);
@@ -96,18 +96,18 @@
 
     _handleDrag: function (e) {
       this._resetBoxSize();
-      var prevExtendX = this._extendX;
-      var prevExtendY = this._extendY;
-      this._extendX = 0;
-      this._extendY = 0;
+      var prevcloneX = this._cloneX;
+      var prevcloneY = this._cloneY;
+      this._cloneX = 0;
+      this._cloneY = 0;
       if (Math.abs(e.pageX - this._initialX) > Math.abs(e.pageY - this._initialY)) {
         this._getCellsHorizontally(e.pageX);
       } else {
         this._getCellsVertically(e.pageY);
       }
-      if (prevExtendX !== this._extendX || prevExtendY !== this._extendY) {
-        this._trigger("selected", null, { extendX: this._extendX,
-                                          extendY: this._extendY });
+      if (prevcloneX !== this._cloneX || prevcloneY !== this._cloneY) {
+        this._trigger("selected", null, { cloneX: this._cloneX,
+                                          cloneY: this._cloneY });
       }
     },
 
@@ -139,7 +139,7 @@
         return;
       }
 
-      this._extendY -= 1;
+      this._cloneY -= 1;
       this._box.height(this._box.offset().top + this._box.height() - this._getCellEdges(next).top + this._boxBorder);
       this._getCellsUp(next, offset);
     },
@@ -151,7 +151,7 @@
         return;
       }
 
-      this._extendX -= 1;
+      this._cloneX -= 1;
       this._box.width(this._box.offset().left + this._box.width() - this._getCellEdges(next).left + this._boxBorder);
       this._getCellsLeft(next, offset);
     },
@@ -163,7 +163,7 @@
         return;
       }
 
-      this._extendX += 1;
+      this._cloneX += 1;
       this._box.width(this._getCellEdges(next).right - this._box.offset().left - this._boxBorder);
       this._getCellsRight(next, offset);
     },
@@ -176,7 +176,7 @@
         return;
       }
 
-      this._extendY += 1;
+      this._cloneY += 1;
       this._box.height(this._getCellEdges(next).bottom - this._box.offset().top - this._boxBorder);
       this._getCellsDown(next, offset);
     },
