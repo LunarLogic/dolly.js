@@ -1,5 +1,5 @@
 table, th, td {
-  border: 9px solid #ccc;
+  border: 2px solid white;
 }
 
 td:nth-child(1) {
@@ -40,10 +40,6 @@ tr:nth-child(4) {
 
 tr:nth-child(5) {
   height: 60px;
-}
-
-tr:nth-child(6) {
-  height: 70px;
 }
 
 table {

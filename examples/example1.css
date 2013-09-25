@@ -1,0 +1,13 @@
+td {
+  border: 3px solid #ccc;
+  margin: 0;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+}
+
+table {
+  border-collapse: none;
+  border-spacing: 0;
+  border: 3px solid #ccc;
+}
