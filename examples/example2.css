@@ -1,5 +1,6 @@
 table, th, td {
   border: 2px solid white;
+  padding: 0;
 }
 
 td:nth-child(1) {
@@ -22,23 +23,27 @@ td:nth-child(5) {
   width: 60px;
 }
 
-tr:nth-child(1) {
+td:nth-child(5) td {
+  width: 60px;
+}
+
+tr:nth-child(1) td {
   height: 20px;
 }
 
-tr:nth-child(2) {
+tr:nth-child(2) td {
   height: 30px;
 }
 
-tr:nth-child(3) {
+tr:nth-child(3) td {
   height: 40px;
 }
 
-tr:nth-child(4) {
+tr:nth-child(4) td {
   height: 50px;
 }
 
-tr:nth-child(5) {
+tr:nth-child(5) td {
   height: 60px;
 }
 

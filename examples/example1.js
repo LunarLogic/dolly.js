@@ -11,7 +11,7 @@ $(window).load(function () {
       for (var i = indexY; amountY >= 0; i += dirY, amountY--) {
         var amX = amountX;
         for (var j = indexX; amX >= 0; j += dirX, amX--) {
-          this.data[i][j] = this.data[indexX][indexY];
+          this.data[i][j] = this.data[indexY][indexX];
         }
       }
 
