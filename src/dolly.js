@@ -85,7 +85,9 @@
           $(window).off("mousemove", mouseMoveListener);
           $(window).off("mouseup", mouseUpListener);
           self._trigger("cloned", null, { cloneX: self._cloneX,
-                                          cloneY: self._cloneY });
+                                          cloneY: self._cloneY,
+                                          originX: self._getOriginX(),
+                                          originY: self._getOriginY() });
         }
 
         $(window).on("mousemove", mouseMoveListener);
@@ -107,7 +109,9 @@
       }
       if (prevcloneX !== this._cloneX || prevcloneY !== this._cloneY) {
         this._trigger("selected", null, { cloneX: this._cloneX,
-                                          cloneY: this._cloneY });
+                                          cloneY: this._cloneY,
+                                          originX: this._getOriginX(),
+                                          originY: this._getOriginY() });
       }
     },
 
@@ -222,6 +226,15 @@
     _getCssAsNumber: function (param, elem) {
       elem = elem || this.element;
       return parseInt(elem.css(param), 10);
+    },
+
+    _getOriginX: function () {
+      return this.element.closest(this.options.rowSelector).find(this.options.cellSelector).index(this.element);
+    },
+
+    _getOriginY: function () {
+      var row = this.element.closest(this.options.rowSelector);
+      return row.parent().find(this.options.rowSelector).index(row);
     },
 
   });

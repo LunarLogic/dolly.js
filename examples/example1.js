@@ -1,9 +1,7 @@
 $(window).load(function () {
   var tableController = {
-    onClone: function (el, cloneX, cloneY) {
+    onClone: function (el, cloneX, cloneY, indexX, indexY) {
       var row = $(el).closest('tr'),
-          indexX = $(el).closest('tr').find('td').index(el),
-          indexY = this.element.find('tr').index(row),
           dirX = cloneX > 0 ? 1 : -1,
           dirY = cloneY > 0 ? 1 : -1,
           amountX = Math.abs(cloneX),
@@ -32,7 +30,7 @@ $(window).load(function () {
       }
       $("td").dolly({
         cloned: function (event, ui) {
-          self.onClone(this, ui.cloneX, ui.cloneY);
+          self.onClone(this, ui.cloneX, ui.cloneY, ui.originX, ui.originY);
         },
         boxStyle: {
           "background-color": "rgba(255, 0, 0, 0.2)",
