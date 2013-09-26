@@ -37,7 +37,16 @@ $(window).load(function () {
         boxStyle: {
           "background-color": "rgba(255, 0, 0, 0.2)",
           border: "3px red dotted"
-        }
+        },
+        handleStyle: {
+          width: "0",
+          height: "0",
+          "background-color": "transparent",
+          "border-top": "7px solid transparent",
+          "border-bottom": "7px solid black",
+          "border-right": "7px solid black",
+          "border-left": "7px solid transparent",
+        },
       });
     }
   }

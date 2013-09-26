@@ -41,8 +41,8 @@
 
       this._wrapper.css(this._wrapperStyle);
 
-      this._handle.css({right: -1 * this._getCssAsNumber("padding-right") - 2 + "px",
-                        bottom: -1 * this._getCssAsNumber("padding-bottom") - 2 + "px"});
+      this._handle.css({right: -1 * this._getCssAsNumber("padding-right") + "px",
+                        bottom: -1 * this._getCssAsNumber("padding-bottom") + "px"});
       this._handle.css(this.options.handleStyle);
       this._handle.css(this._handleStyle);
 

@@ -45,7 +45,7 @@ $(window).load(function () {
       $("td").dolly({
         cloned: function (event, ui) {
           self.onClone(this, ui.cloneX, ui.cloneY);
-        }
+        },
       });
 
       this.setRandomColors();
