@@ -1,0 +1,51 @@
+table, th, td {
+  border: 2px solid #ccc;
+}
+
+td:nth-child(1) {
+  width: 20px;
+}
+
+td:nth-child(2) {
+  width: 30px;
+}
+
+td:nth-child(3) {
+  width: 40px;
+}
+
+td:nth-child(4) {
+  width: 50px;
+}
+
+td:nth-child(5) {
+  width: 60px;
+}
+
+tr:nth-child(1) {
+  height: 20px;
+}
+
+tr:nth-child(2) {
+  height: 30px;
+}
+
+tr:nth-child(3) {
+  height: 40px;
+}
+
+tr:nth-child(4) {
+  height: 50px;
+}
+
+tr:nth-child(5) {
+  height: 60px;
+}
+
+tr:nth-child(6) {
+  height: 70px;
+}
+
+table {
+  border-collapse: collapse;
+}

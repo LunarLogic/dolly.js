@@ -1,0 +1,12 @@
+td {
+  border: 3px solid #ccc;
+}
+
+td {
+  width: 30px;
+  height: 30px;
+}
+
+table {
+  border-collapse: none;
+}

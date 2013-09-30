@@ -1,0 +1,4 @@
+$(function () {
+  $('td').dolly();
+});
+
