@@ -4,32 +4,32 @@
       rowSelector: "tr",
       cellSelector: "td",
       boxStyle: {
-        border: "2px dotted black",
+        border: "2px dotted black"
       },
       handleStyle: {
         width: "8px",
         height: "8px",
         "background-color": "black",
-        cursor: "crosshair",
-      },
+        cursor: "crosshair"
+      }
     },
 
     _boxStyle: {
       position: "absolute",
       width: "100%",
       height: "100%",
-      "z-index": "1000",
+      "z-index": "1000"
     },
 
     _handleStyle: {
-      position: "absolute",
+      position: "absolute"
     },
 
     _wrapperStyle: {
       position: "relative",
       height: "100%",
       width: "100%",
-      display: "inline-block",
+      display: "inline-block"
     },
 
     _create: function () {
@@ -235,7 +235,7 @@
     _getOriginY: function () {
       var row = this.element.closest(this.options.rowSelector);
       return row.parent().find(this.options.rowSelector).index(row);
-    },
+    }
 
   });
 }(jQuery));
