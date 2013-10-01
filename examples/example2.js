@@ -24,7 +24,7 @@ $(window).load(function () {
 
       this.element.find("tr").each(function () {
         $(this).find("td").each(function () {
-          $(this).css({"background-color": 'rgb(' + rand() + ', ' + rand() + ', ' + rand()});
+          $(this).css({"background-color": 'rgb(' + rand() + ', ' + rand() + ', ' + rand() + ')'});
         });
       });
     },
