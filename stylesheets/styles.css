@@ -411,3 +411,13 @@ footer {
     color:#444;
   }
 }
+
+h2 {
+  clear: both;
+}
+
+.logo {
+  border: none;
+  float: left;
+  margin: 0;
+}
