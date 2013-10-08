@@ -20,7 +20,7 @@
   }
   ],
   "bugs": "https://github.com/LunarLogic/dolly.js/issues",
-  "docs": "http://http://lunarlogic.github.io/dolly.js/",
+  "docs": "http://lunarlogic.github.io/dolly.js/",
   "homepage": "https://github.com/LunarLogic/dolly.js",
   "download": "https://raw.github.com/LunarLogic/dolly.js/master/dolly.min.js",
   "dependencies": {
