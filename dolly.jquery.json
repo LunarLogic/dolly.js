@@ -2,7 +2,7 @@
   "name": "dolly",
   "title": "Dolly.js",
   "description": "Simple jQuery UI widget that adds spreadsheet-like cell cloning capabilities to HTML tables.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "author": {
     "name": "Lunar Logic",
     "url": "http://lunarlogic.io"
