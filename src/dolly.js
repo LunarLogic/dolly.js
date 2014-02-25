@@ -34,48 +34,67 @@
 
     _create: function () {
       this._createElements();
+
+      this._boxBorder = this._getCssAsNumber("border-width", this.elements.box);
+
       this._bindEvents();
     },
 
     _createElements: function() {
-      this._box = $('<div class="dolly-box" style="visibility: hidden"></div>');
-      this._handle = $('<div class="dolly-handle" style="visibility: hidden"></div>');
+      this.elements = {};
 
-      this._wrapper = $('<div id="dolly-wrapper"></div>');
-      this._wrapper.css(this._wrapperStyle);
+      this.elements.box = $('<div class="dolly-box" style="visibility: hidden"></div>');
+      this.elements.handle = $('<div class="dolly-handle" style="visibility: hidden"></div>');
+      this.elements.wrapper = $('<div id="dolly-wrapper"></div>');
 
-      this._handle.css({right: -1 * this._getCssAsNumber("padding-right") + "px",
-                        bottom: -1 * this._getCssAsNumber("padding-bottom") + "px"});
-      this._handle.css(this.options.handleStyle);
-      this._handle.css(this._handleStyle);
+      this.elements.wrapper.css(this._wrapperStyle);
+      this.elements.handle.css(this._processHandleStyle());
+      this.elements.box.css(this._processBoxStyle());
 
-      this._box.css(this.options.boxStyle);
-      this._box.css(this._boxStyle);
+      this.element.wrapInner(this.elements.wrapper);
+      this.elements.wrapper.append(this.elements.box);
+      this.elements.wrapper.append(this.elements.handle);
+    },
 
-      this._boxBorder = this._getCssAsNumber("border-width", this._box);
+    _processHandleStyle: function() {
+      finalHandleStyles = {
+        right: -1 * this._getCssAsNumber("padding-right") + "px",
+        bottom: -1 * this._getCssAsNumber("padding-bottom") + "px"
+      };
 
-      this.element.wrapInner(this._wrapper);
-      this._wrapper = this.element.find('div#dolly-wrapper');
-      this._wrapper.append(this._box);
-      this._wrapper.append(this._handle);
+      $.extend(finalHandleStyles,
+        this.options.handleStyle,
+        this._handleStyle);
+
+      return finalHandleStyles;
+    },
+
+    _processBoxStyle: function() {
+      finalBoxStyle = {}
+      $.extend(finalBoxStyle,
+               this.options.boxStyle,
+               this._boxStyle);
+      return finalBoxStyle;
     },
 
     _bindEvents: function() {
       var self = this;
 
       this.element.hover(function () {
-        self._handle.css({visibility: "visible"});
+        self.elements.handle.css({visibility: "visible"});
       }, function () {
-        self._handle.css({visibility: "hidden"});
+        self.elements.handle.css({visibility: "hidden"});
       });
 
-      this._handle.on("mousedown", function (e) {
+      this.elements.handle.on("mousedown", function (e) {
         self._initialX = e.pageX;
         self._initialY = e.pageY;
         self._cloneX = 0;
         self._cloneY = 0;
-        self._box.css({visibility: "visible"});
-        $("body").find(".dolly-handle").css({display: "none"});
+
+        self.elements.box.css({visibility: "visible"});
+        self.elements.handle.css({display: "none"});
+
         self._resetBoxSize();
         self._setTopLeftBoxPosition();
 
@@ -86,8 +105,9 @@
         }
 
         var mouseUpListener = function () {
-          self._box.css({visibility: "hidden"});
-          $("body").find(".dolly-handle").css({display: ""});
+          self.elements.box.css({visibility: "hidden"});
+          self.elements.handle.css({display: ""});
+
           $(window).enableSelection();
           $(window).off("mousemove", mouseMoveListener);
           $(window).off("mouseup", mouseUpListener);
@@ -108,6 +128,7 @@
       var prevcloneY = this._cloneY;
       this._cloneX = 0;
       this._cloneY = 0;
+
       if (Math.abs(e.pageX - this._initialX) > Math.abs(e.pageY - this._initialY)) {
         this._getCellsHorizontally(e.pageX);
       } else {
@@ -150,7 +171,7 @@
       }
 
       this._cloneY -= 1;
-      this._box.height(this._box.offset().top + this._box.height() - this._getCellEdges(next).top + this._boxBorder);
+      this.elements.box.height(this.elements.box.offset().top + this.elements.box.height() - this._getCellEdges(next).top + this._boxBorder);
       this._getCellsUp(next, offset);
     },
 
@@ -162,7 +183,7 @@
       }
 
       this._cloneX -= 1;
-      this._box.width(this._box.offset().left + this._box.width() - this._getCellEdges(next).left + this._boxBorder);
+      this.elements.box.width(this.elements.box.offset().left + this.elements.box.width() - this._getCellEdges(next).left + this._boxBorder);
       this._getCellsLeft(next, offset);
     },
 
@@ -174,7 +195,7 @@
       }
 
       this._cloneX += 1;
-      this._box.width(this._getCellEdges(next).right - this._box.offset().left - this._boxBorder);
+      this.elements.box.width(this._getCellEdges(next).right - this.elements.box.offset().left - this._boxBorder);
       this._getCellsRight(next, offset);
     },
 
@@ -187,31 +208,31 @@
       }
 
       this._cloneY += 1;
-      this._box.height(this._getCellEdges(next).bottom - this._box.offset().top - this._boxBorder);
+      this.elements.box.height(this._getCellEdges(next).bottom - this.elements.box.offset().top - this._boxBorder);
       this._getCellsDown(next, offset);
     },
 
     _resetBoxSize: function () {
-      this._box.width(this._getCellSize().width);
-      this._box.height(this._getCellSize().height);
+      this.elements.box.width(this._getCellSize().width);
+      this.elements.box.height(this._getCellSize().height);
     },
 
     _setTopLeftBoxPosition: function () {
-      this._box.css({ top: -1 * this._getCssAsNumber("padding-top") - this._boxBorder + "px",
+      this.elements.box.css({ top: -1 * this._getCssAsNumber("padding-top") - this._boxBorder + "px",
                       left: -1 * this._getCssAsNumber("padding-left") - this._boxBorder + "px",
                       bottom: "",
                       right: "" });
     },
 
     _setBottomRightBoxPosition: function () {
-      this._box.css({ bottom: -1 * this._getCssAsNumber("padding-bottom") - this._boxBorder + "px",
+      this.elements.box.css({ bottom: -1 * this._getCssAsNumber("padding-bottom") - this._boxBorder + "px",
                       right: -1 * this._getCssAsNumber("padding-right") - this._boxBorder + "px",
                       top: "",
                       left: "" });
     },
 
     _getCellEdges: function (cell) {
-      var wrapper = cell.find("#dolly-wrapper");
+      var wrapper = this.elements.wrapper;
       return {
         top: wrapper.offset().top - this._getCssAsNumber("padding-top", cell),
         bottom: wrapper.offset().top + wrapper.height() + this._getCssAsNumber("padding-bottom", cell),
@@ -222,7 +243,7 @@
 
     _getCellSize: function (cell) {
       cell = cell || this.element;
-      var wrapper = cell.find("#dolly-wrapper");
+      var wrapper = this.elements.wrapper;
       return {
         width: this._getCssAsNumber("padding-left", cell) + this._getCssAsNumber("padding-right", cell) + wrapper.width(),
         height: this._getCssAsNumber("padding-top", cell) + this._getCssAsNumber("padding-bottom", cell) + wrapper.height()
