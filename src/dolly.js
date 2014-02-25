@@ -1,4 +1,22 @@
 (function ($) {
+
+  var DIV = '<div/>',
+    classes = {
+      box: 'dolly-box',
+      handle: 'dolly-handler',
+      wrapper: 'dolly-wrapper'
+    };
+
+  var pageLevel = {
+    setHandlersDisplay: function(value) {
+      return $('.' + classes.handle).css({display: value});
+    }
+  };
+
+  var clazz = function(className) {
+    return  '.' + className;
+  };
+
   $.widget("llp.dolly", {
     options: {
       rowSelector: "tr",
@@ -45,15 +63,16 @@
     _createElements: function() {
       this.elements = {};
 
-      this.elements.box = $('<div class="dolly-box"></div>');
-      this.elements.handle = $('<div class="dolly-handle"></div>');
-      this.elements.wrapper = $('<div id="dolly-wrapper"></div>');
+      this.elements.box = $(DIV, {'class': classes.box});
+      this.elements.handle = $(DIV, {'class': classes.handle});
+      this.elements.wrapper = $(DIV, {'class': classes.wrapper});
 
       this.elements.box.css(this._processBoxStyle());
       this.elements.handle.css(this._processHandleStyle());
       this.elements.wrapper.css(this._wrapperStyle);
 
       this.element.wrapInner(this.elements.wrapper);
+      this.elements.wrapper = this.element.find(clazz(classes.wrapper));
       this.elements.wrapper.append(this.elements.box);
       this.elements.wrapper.append(this.elements.handle);
     },
@@ -87,7 +106,8 @@
         self._cloneY = 0;
 
         self.elements.box.css({visibility: "visible"});
-        self.elements.handle.css({display: "none"});
+
+        pageLevel.setHandlersDisplay("none");
 
         self._resetBoxSize();
         self._setTopLeftBoxPosition();
@@ -100,7 +120,8 @@
 
         var mouseUpListener = function () {
           self.elements.box.css({visibility: "hidden"});
-          self.elements.handle.css({display: ""});
+
+          pageLevel.setHandlersDisplay("");
 
           $(window).enableSelection();
           $(window).off("mousemove", mouseMoveListener);
@@ -226,7 +247,7 @@
     },
 
     _getCellEdges: function (cell) {
-      var wrapper = this.elements.wrapper;
+      var wrapper = cell.find(clazz(classes.wrapper));
       return {
         top: wrapper.offset().top - this._getCssAsNumber("padding-top", cell),
         bottom: wrapper.offset().top + wrapper.height() + this._getCssAsNumber("padding-bottom", cell),
@@ -237,7 +258,7 @@
 
     _getCellSize: function (cell) {
       cell = cell || this.element;
-      var wrapper = this.elements.wrapper;
+      var wrapper = cell.find(clazz(classes.wrapper));
       return {
         width: this._getCssAsNumber("padding-left", cell) + this._getCssAsNumber("padding-right", cell) + wrapper.width(),
         height: this._getCssAsNumber("padding-top", cell) + this._getCssAsNumber("padding-bottom", cell) + wrapper.height()
