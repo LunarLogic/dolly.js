@@ -59,16 +59,16 @@
     },
 
     _processHandleStyle: function() {
-      return $.extend({
+      return $.extend(this.options.handleStyle,
+        this._handleStyle,
+        {
           right: -1 * this._getCssAsNumber("padding-right") + "px",
           bottom: -1 * this._getCssAsNumber("padding-bottom") + "px"
-        },
-        this._handleStyle,
-        this.options.handleStyle);
+        });
     },
 
     _processBoxStyle: function() {
-      return $.extend({}, this._boxStyle, this.options.boxStyle);
+      return $.extend(this.options.boxStyle, this._boxStyle);
     },
 
     _bindEvents: function() {
