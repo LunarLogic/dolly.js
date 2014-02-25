@@ -57,24 +57,16 @@
     },
 
     _processHandleStyle: function() {
-      finalHandleStyles = {
-        right: -1 * this._getCssAsNumber("padding-right") + "px",
-        bottom: -1 * this._getCssAsNumber("padding-bottom") + "px"
-      };
-
-      $.extend(finalHandleStyles,
-        this.options.handleStyle,
-        this._handleStyle);
-
-      return finalHandleStyles;
+      return $.extend({
+          right: -1 * this._getCssAsNumber("padding-right") + "px",
+          bottom: -1 * this._getCssAsNumber("padding-bottom") + "px"
+        },
+        this._handleStyle,
+        this.options.handleStyle);
     },
 
     _processBoxStyle: function() {
-      finalBoxStyle = {}
-      $.extend(finalBoxStyle,
-               this.options.boxStyle,
-               this._boxStyle);
-      return finalBoxStyle;
+      return $.extend({}, this._boxStyle, this.options.boxStyle);
     },
 
     _bindEvents: function() {
