@@ -33,12 +33,15 @@
     },
 
     _create: function () {
-      var self = this;
+      this._createElements();
+      this._bindEvents();
+    },
 
+    _createElements: function() {
       this._box = $('<div class="dolly-box" style="visibility: hidden"></div>');
       this._handle = $('<div class="dolly-handle" style="visibility: hidden"></div>');
-      this._wrapper = $('<div id="dolly-wrapper"></div>');
 
+      this._wrapper = $('<div id="dolly-wrapper"></div>');
       this._wrapper.css(this._wrapperStyle);
 
       this._handle.css({right: -1 * this._getCssAsNumber("padding-right") + "px",
@@ -55,6 +58,10 @@
       this._wrapper = this.element.find('div#dolly-wrapper');
       this._wrapper.append(this._box);
       this._wrapper.append(this._handle);
+    },
+
+    _bindEvents: function() {
+      var self = this;
 
       this.element.hover(function () {
         self._handle.css({visibility: "visible"});
@@ -93,7 +100,6 @@
         $(window).on("mousemove", mouseMoveListener);
         $(window).on("mouseup", mouseUpListener);
       });
-
     },
 
     _handleDrag: function (e) {
