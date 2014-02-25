@@ -18,11 +18,13 @@
       position: "absolute",
       width: "100%",
       height: "100%",
-      "z-index": "1000"
+      "z-index": "1000",
+      visibility: "hidden"
     },
 
     _handleStyle: {
-      position: "absolute"
+      position: "absolute",
+      visibility: "hidden"
     },
 
     _wrapperStyle: {
@@ -43,8 +45,8 @@
     _createElements: function() {
       this.elements = {};
 
-      this.elements.box = $('<div class="dolly-box" style="visibility: hidden"></div>');
-      this.elements.handle = $('<div class="dolly-handle" style="visibility: hidden"></div>');
+      this.elements.box = $('<div class="dolly-box"></div>');
+      this.elements.handle = $('<div class="dolly-handle"></div>');
       this.elements.wrapper = $('<div id="dolly-wrapper"></div>');
 
       this.elements.wrapper.css(this._wrapperStyle);
@@ -255,6 +257,5 @@
       var row = this.element.closest(this.options.rowSelector);
       return row.parent().find(this.options.rowSelector).index(row);
     }
-
   });
 }(jQuery));
