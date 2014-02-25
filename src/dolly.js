@@ -49,9 +49,9 @@
       this.elements.handle = $('<div class="dolly-handle"></div>');
       this.elements.wrapper = $('<div id="dolly-wrapper"></div>');
 
-      this.elements.wrapper.css(this._wrapperStyle);
-      this.elements.handle.css(this._processHandleStyle());
       this.elements.box.css(this._processBoxStyle());
+      this.elements.handle.css(this._processHandleStyle());
+      this.elements.wrapper.css(this._wrapperStyle);
 
       this.element.wrapInner(this.elements.wrapper);
       this.elements.wrapper.append(this.elements.box);
