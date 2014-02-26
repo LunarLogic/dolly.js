@@ -7,14 +7,14 @@
       wrapper: 'dolly-wrapper'
     };
 
-  var pageLevel = {
-    setHandlersDisplay: function(value) {
-      return $('.' + classes.handle).css({display: value});
-    }
-  };
-
   var clazz = function(className) {
     return  '.' + className;
+  };
+
+  var pageLevel = {
+    setHandlersDisplay: function(value) {
+      return $(clazz(classes.handle)).css({display: value});
+    }
   };
 
   $.widget("llp.dolly", {
@@ -149,6 +149,7 @@
       } else {
         this._getCellsVertically(e.pageY);
       }
+
       if (prevcloneX !== this._cloneX || prevcloneY !== this._cloneY) {
         this._trigger("selected", null, { cloneX: this._cloneX,
                                           cloneY: this._cloneY,
