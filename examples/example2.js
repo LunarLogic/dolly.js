@@ -43,6 +43,7 @@ $(window).load(function () {
       }
 
       $("td").dolly({
+        allowDiagonalSelection: false,
         cloned: function (event, ui) {
           self.onClone(this, ui.cloneX, ui.cloneY);
         },
