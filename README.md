@@ -32,7 +32,7 @@ $(cell).dolly({
 });
 ```
 
-will make possible to select a square of cells like this:
+will make possible to select a group of cells like this:
 
 ![cloning an area of cells](https://raw.github.com/LunarLogic/dolly.js/master/examples/imgs/area_selection.png)
 
