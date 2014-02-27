@@ -29,6 +29,7 @@ $(window).load(function () {
         this.element.append(row);
       }
       $("td").dolly({
+        allowDiagonalSelection: true,
         cloned: function (event, ui) {
           self.onClone(this, ui.cloneX, ui.cloneY, ui.originX, ui.originY);
         },

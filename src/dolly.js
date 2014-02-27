@@ -7,12 +7,12 @@
       wrapper: 'dolly-wrapper'
     };
 
-  var clazz = function(className) {
+  var clazz = function (className) {
     return  '.' + className;
   };
 
   var pageLevel = {
-    setHandlersDisplay: function(value) {
+    setHandlersDisplay: function (value) {
       return $(clazz(classes.handle)).css({display: value});
     }
   };
@@ -21,6 +21,7 @@
     options: {
       rowSelector: "tr",
       cellSelector: "td",
+      allowDiagonalSelection: false,
       boxStyle: {
         border: "2px dotted black"
       },
@@ -60,7 +61,7 @@
       this._bindEvents();
     },
 
-    _createElements: function() {
+    _createElements: function () {
       this.elements = {};
 
       this.elements.box = $(DIV, {'class': classes.box});
@@ -77,7 +78,7 @@
       this.elements.wrapper.append(this.elements.handle);
     },
 
-    _processHandleStyle: function() {
+    _processHandleStyle: function () {
       return $.extend(this.options.handleStyle,
         this._handleStyle,
         {
@@ -86,11 +87,11 @@
         });
     },
 
-    _processBoxStyle: function() {
+    _processBoxStyle: function () {
       return $.extend(this.options.boxStyle, this._boxStyle);
     },
 
-    _bindEvents: function() {
+    _bindEvents: function () {
       var self = this;
 
       this.element.hover(function () {
@@ -144,10 +145,14 @@
       this._cloneX = 0;
       this._cloneY = 0;
 
-      if (Math.abs(e.pageX - this._initialX) > Math.abs(e.pageY - this._initialY)) {
-        this._getCellsHorizontally(e.pageX);
+      if (this.options.allowDiagonalSelection) {
+        this._getCells(e.pageX, e.pageY);
       } else {
-        this._getCellsVertically(e.pageY);
+        if (Math.abs(e.pageX - this._initialX) > Math.abs(e.pageY - this._initialY)) {
+          this._getCellsHorizontally(e.pageX);
+        } else {
+          this._getCellsVertically(e.pageY);
+        }
       }
 
       if (prevcloneX !== this._cloneX || prevcloneY !== this._cloneY) {
@@ -155,6 +160,26 @@
                                           cloneY: this._cloneY,
                                           originX: this._getOriginX(),
                                           originY: this._getOriginY() });
+      }
+    },
+
+    _getCells: function (offsetX, offsetY) {
+      if (offsetX < this._initialX && offsetY < this._initialY) {
+        this._setBottomRightBoxPosition();
+        this._getCellsLeft(this.element, offsetX);
+        this._getCellsUp(this.element, offsetY);
+      } else if (offsetX > this._initialX && offsetY < this._initialY) {
+        this._setBottomLeftBoxPosition();
+        this._getCellsRight(this.element, offsetX);
+        this._getCellsUp(this.element, offsetY);
+      } else if (offsetX > this._initialX && offsetY > this._initialY) {
+        this._setTopLeftBoxPosition();
+        this._getCellsRight(this.element, offsetX);
+        this._getCellsDown(this.element, offsetY);
+      } else if (offsetX < this._initialX && offsetY > this._initialY) {
+        this._setTopRightBoxPosition();
+        this._getCellsLeft(this.element, offsetX);
+        this._getCellsDown(this.element, offsetY);
       }
     },
 
@@ -233,18 +258,32 @@
       this.elements.box.height(this._getCellSize().height);
     },
 
+    _setTopRightBoxPosition: function () {
+      this.elements.box.css({top: -1 * this._getCssAsNumber("padding-top") - this._boxBorder + "px",
+                      right: -1 * this._getCssAsNumber("padding-right") - this._boxBorder + "px",
+                      bottom: "",
+                      left: ""});
+    },
+
     _setTopLeftBoxPosition: function () {
-      this.elements.box.css({ top: -1 * this._getCssAsNumber("padding-top") - this._boxBorder + "px",
+      this.elements.box.css({top: -1 * this._getCssAsNumber("padding-top") - this._boxBorder + "px",
                       left: -1 * this._getCssAsNumber("padding-left") - this._boxBorder + "px",
                       bottom: "",
-                      right: "" });
+                      right: ""});
+    },
+
+    _setBottomLeftBoxPosition: function () {
+      this.elements.box.css({bottom: -1 * this._getCssAsNumber("padding-bottom") - this._boxBorder + "px",
+                      left: -1 * this._getCssAsNumber("padding-left") - this._boxBorder + "px",
+                      top: "",
+                      right: ""});
     },
 
     _setBottomRightBoxPosition: function () {
-      this.elements.box.css({ bottom: -1 * this._getCssAsNumber("padding-bottom") - this._boxBorder + "px",
+      this.elements.box.css({bottom: -1 * this._getCssAsNumber("padding-bottom") - this._boxBorder + "px",
                       right: -1 * this._getCssAsNumber("padding-right") - this._boxBorder + "px",
                       top: "",
-                      left: "" });
+                      left: ""});
     },
 
     _getCellEdges: function (cell) {
