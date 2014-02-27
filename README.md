@@ -20,6 +20,22 @@ You can find more elaborate examples in the `examples` directory.
 Options
 -------
 
+####allowDiagonalSelection
+
+Enable possiblity to select cells in an area. Defaults to `false`. Example:
+
+```
+$(cell).dolly({
+  allowDiagonalSelection: true,
+  rowSelector: 'div.row',
+  cellSelector: 'div.cell'
+});
+```
+
+will make possible to select a square of cells like this:
+
+![cloning an area of cells](https://raw.github.com/LunarLogic/dolly.js/master/examples/imgs/area_selection.png)
+
 ####rowSelector
 
 jQuery selector for elements that should be considered the rows of the table. Defaults to `"tr"`. Example:
