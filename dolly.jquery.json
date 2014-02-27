@@ -2,22 +2,26 @@
   "name": "dolly",
   "title": "Dolly.js",
   "description": "Simple jQuery UI widget that adds spreadsheet-like cell cloning capabilities to HTML tables.",
-  "version": "1.0.2",
+  "version": "1.1.2",
   "author": {
     "name": "Lunar Logic",
     "url": "http://lunarlogic.io"
   },
   "maintainers": [
-  {
-    "name": "Marcin Kostrzewa",
-    "url": "https://github.com/kustosz"
-  }
+    {
+      "name": "Marcin Kostrzewa",
+      "url": "https://github.com/kustosz"
+    },
+    {
+      "name": "Rafael Caricio",
+      "url": "https://github.com/rafaelcaricio"
+    }
   ],
   "licenses": [
-  {
-    "type": "MIT",
-    "url": "https://github.com/LunarLogic/dolly.js/blob/master/MIT-LICENSE.txt"
-  }
+    {
+      "type": "MIT",
+      "url": "https://github.com/LunarLogic/dolly.js/blob/master/MIT-LICENSE.txt"
+    }
   ],
   "bugs": "https://github.com/LunarLogic/dolly.js/issues",
   "docs": "http://lunarlogic.github.io/dolly.js/",
