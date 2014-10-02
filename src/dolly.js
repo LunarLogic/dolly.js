@@ -117,7 +117,7 @@
 
         var mouseMoveListener = function (e) {
           self._handleDrag(e);
-        }
+        };
 
         var mouseUpListener = function () {
           self.elements.box.css({visibility: "hidden"});
@@ -131,7 +131,7 @@
                                           cloneY: self._cloneY,
                                           originX: self._getOriginX(),
                                           originY: self._getOriginY() });
-        }
+        };
 
         $(window).on("mousemove", mouseMoveListener);
         $(window).on("mouseup", mouseUpListener);
