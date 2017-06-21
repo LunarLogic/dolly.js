@@ -20,7 +20,7 @@ You can find more elaborate examples in the `examples` directory.
 Options
 -------
 
-####allowDiagonalSelection
+#### allowDiagonalSelection
 
 Enable possiblity to select cells in an area. Defaults to `false`. Example:
 
@@ -36,7 +36,7 @@ will make possible to select a group of cells like this:
 
 ![cloning an area of cells](https://raw.github.com/LunarLogic/dolly.js/master/examples/imgs/area_selection.png)
 
-####rowSelector
+#### rowSelector
 
 jQuery selector for elements that should be considered the rows of the table. Defaults to `"tr"`. Example:
 
@@ -47,7 +47,7 @@ $(cell).dolly({
 });
 ```
 
-####cellSelector
+#### cellSelector
 
 jQuery selector for elements that should be considered the cells of the table. Defaults to `"td"`. Example:
 
@@ -57,7 +57,7 @@ $(cell).dolly({
   cellSelector: 'div.cell'
 });
 ```
-####boxStyle
+#### boxStyle
 
 Object with custom CSS styles assigned to the selection box displayed when user clones cells. For example:
 
@@ -75,7 +75,7 @@ will result in a selection box like this:
 
 You can also style this with CSS `dolly-box` class.
 
-####handleStyle
+#### handleStyle
 
 Object with custom CSS styles assigned to the handle of the cloning box.
 
@@ -105,7 +105,7 @@ Events
 
 In all event callbacks `this` is bound to the origin HTML cell element.
 
-####Contents of `ui` object
+#### Contents of `ui` object
 
 The `ui` object is passed as the second argument to every callback. It contains:
 
@@ -114,7 +114,7 @@ The `ui` object is passed as the second argument to every callback. It contains:
 * `cloneX` - number of cells selected for cloning horizontally. Negative values stand for cloning to the left, positive to the right.
 * `cloneY` - number of cells selected for cloning vertically. Negative values stand for cloning up, positive for cloning down.
 
-####cloned
+#### cloned
 
 Triggered whenever user requests cloning of a cell. You can pass a callback during dolly initialization like this:
 
@@ -126,13 +126,13 @@ $(cell).dolly({
 });
 ```
 
-or listen on `dollycloned` event: 
+or listen on `dollycloned` event:
 
 ```
 $(cell).dolly().on('dollycloned', function (event, ui) {...});
 ```
 
-####selected
+#### selected
 
 Triggered whenever the size of selection box changes. This does not mean a clone request, just a user moving the handle. After user releases the handle, `cloned` event is triggered.
 
